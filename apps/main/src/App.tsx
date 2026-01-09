@@ -23,10 +23,10 @@ function App() {
 
         // 2. Update state
         setTheme(themeData as ThemeSettings);
-        setStatus(`Online`); // Simplified status
+        //setStatus(`Online`); // Simplified status
       } catch (err) {
         console.error("Initialization error:", err);
-        setStatus("Brain connection failed.");
+        //setStatus("Brain connection failed.");
       }
     }
 
