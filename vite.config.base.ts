@@ -7,8 +7,8 @@ export const baseConfig = defineConfig({
   resolve: {
     alias: {
       // These aliases allow apps to import shared code easily
-      '@wade-usa/sdk': path.resolve(__dirname, './packages/shared/sdk/src'),
-      '@wade-usa/ui': path.resolve(__dirname, './packages/shared/ui/src'),
+      '@wade-usa/sdk': path.resolve(__dirname, './packages/shared/sdk/src/index.ts'),
+      '@wade-usa/ui': path.resolve(__dirname, './packages/shared/ui/src/index.ts'),
     },
   },
   // This ensures that the shared packages are processed by Vite
