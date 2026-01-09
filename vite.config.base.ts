@@ -7,7 +7,7 @@ export const baseConfig = defineConfig({
   resolve: {
     alias: {
       // These aliases allow apps to import shared code easily
-      '@wade-usa/sdk': path.resolve(__dirname, './packages/shared/sdk/src/index.ts'),
+      '@wade-usa/sdk': path.resolve(__dirname, './packages/shared/sdk/index.ts'),
       '@wade-usa/ui': path.resolve(__dirname, './packages/shared/ui/src/index.ts'),
     },
   },
