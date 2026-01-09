@@ -4,6 +4,12 @@ import path from 'path';
 
 export const baseConfig = defineConfig({
   plugins: [react()],
+  preview:{
+    allowedHosts:[
+        'wade-usa.com',
+        '.wade-usa.com'
+    ]
+  },
   resolve: {
     alias: {
       // These aliases allow apps to import shared code easily
