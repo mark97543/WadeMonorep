@@ -10,7 +10,7 @@ export const WadeThemeProvider = ({ themeData, children }: ThemeProps) => {
     if (!themeData) return;
 
     const root = document.documentElement;
-    console.log("🎨 Injecting Theme Data:", themeData);
+    // console.log("🎨 Injecting Theme Data:", themeData);
 
     Object.entries(themeData).forEach(([key, value]) => {
       // Only process string values (colors, radius, etc.)
