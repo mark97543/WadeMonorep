@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "baseUrl": "."
+  },
+  "include": ["src/**/*", "src/env.d.ts", "src/index.ts"]
+}

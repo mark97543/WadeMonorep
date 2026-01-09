@@ -1,0 +1,13 @@
+.wadeButton{
+    background-color: var(--accent-color);
+    color:white;
+    padding: 12px 24px;
+    border:none;
+    border-radius: 6px;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.wadeButton:hover{
+    opacity:0.8;
+}
