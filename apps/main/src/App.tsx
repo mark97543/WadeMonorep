@@ -5,13 +5,12 @@ import { readSingleton } from '@directus/sdk';
 
 // 1. Define what our Theme data looks like
 interface ThemeSettings {
-  primary_color: string;
-  accent_color: string;
+  [key:string]: string | any;
 }
 
 function App() {
   const [theme, setTheme] = useState<ThemeSettings | null>(null);
-  const [status, setStatus] = useState("Connecting to Brain...");
+  //const [status, setStatus] = useState("Connecting to Brain...");
   useEffect(() => {
     async function initApp() {
       try {
