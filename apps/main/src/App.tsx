@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { client, serverInfo } from '@wade-usa/sdk';
+import { client } from '@wade-usa/sdk';
 import { WadeThemeProvider, WadeButton } from '@wade-usa/ui';
 import { readSingleton } from '@directus/sdk';
 
@@ -13,30 +13,21 @@ function App() {
   const [theme, setTheme] = useState<ThemeSettings | null>(null);
   const [status, setStatus] = useState("Connecting to Brain...");
   useEffect(() => {
-
     async function initApp() {
       try {
-
-        // 2. Check the API connection
-        const info = await client.request(serverInfo());
-        
-        // Handle different version response formats safely
-        const version = (info as any).project?.version || (info as any).version || "11.x";
-
-        // 3. Fetch your Theme Singleton from Directus
-        // Make sure the collection name 'theme_settings' matches your Directus exactly
+        // 1. Fetch your Theme Singleton from Directus
         const themeData = await client.request(
           readSingleton('Global_Settings', {
-            fields: ['*'], // Get every variable you ever create!
+            fields: ['*'],
           })
         );
 
-        // 4. Update state with the data from the Brain
+        // 2. Update state
         setTheme(themeData as ThemeSettings);
-        setStatus(`Online: v${version}`);
+        setStatus(`Online`); // Simplified status
       } catch (err) {
         console.error("Initialization error:", err);
-        setStatus("Brain connection failed. Check CORS or Token.");
+        setStatus("Brain connection failed.");
       }
     }
 
