@@ -5,7 +5,7 @@
 
   ],
   "scripts": {
-    "dev": "npm run dev --workspaces --if-present",
+    "dev": "pnpm --filter \"@wade-usa/*\" dev",
     "build": "npm run build --workspaces --if-present"
   }
 }
