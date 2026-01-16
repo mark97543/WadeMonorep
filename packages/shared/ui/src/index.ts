@@ -1,6 +1,8 @@
 export * from './ThemeProvider';
-export * from './components/Button/Button';
-export * from './components/WadeNavbar/WadeNavbar';
-export * from './components/WadeCard/WadeCard';
-export * from './components/WadeLogin/WadeLogin'
-export * from './components/WadeRegister/WadeRegister'
+export * from './components/Atoms/Button/Button';
+export * from './components/Major Components/WadeNavbar/WadeNavbar';
+export * from './components/Major Components/WadeCard/WadeCard';
+export * from './components/Pages/WadeLogin/WadeLogin';
+export * from './components/Pages/WadeRegister/WadeRegister';
+export * from './components/Major Components/WadeGrid/WadeGrid';
+export * from './components/Pages/WadePending/WadePending';

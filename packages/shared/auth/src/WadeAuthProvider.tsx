@@ -12,11 +12,11 @@ export const WadeAuthProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       const currentUser = await getCurrentUser();
       // 🔍 THE INSPECTOR LOG
-      console.log("--- AUTH CHECK ---");
-      console.log("Full User Object:", currentUser);
-      console.log("Role Field Value:", currentUser?.role);
-      console.log("Role Type:", typeof currentUser?.role);
-      console.log("------------------");
+      // console.log("--- AUTH CHECK ---");
+      // console.log("Full User Object:", currentUser);
+      // console.log("Role Field Value:", currentUser?.role);
+      // console.log("Role Type:", typeof currentUser?.role);
+      // console.log("------------------");
       setUser(currentUser);
     } catch (error) {
       setUser(null);
