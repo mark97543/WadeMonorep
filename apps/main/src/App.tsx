@@ -1,76 +1,183 @@
+// apps/main/src/App.tsx
 import { useEffect, useState } from 'react';
-import { client } from '@wade-usa/sdk';
-import { WadeThemeProvider, WadeButton } from '@wade-usa/ui';
-import { readSingleton } from '@directus/sdk';
 
-// 1. Define what our Theme data looks like
-interface ThemeSettings {
-  [key:string]: string | any;
-}
+// 1. Shared Logic & Security
+import { WadeAuthProvider, useAuth } from '@wade-usa/auth';
+import { getSettingsGeneric, registerUser } from '@wade-usa/sdk';
 
-function App() {
-  const [theme, setTheme] = useState<ThemeSettings | null>(null);
-  //const [status, setStatus] = useState("Connecting to Brain...");
+// 2. Shared UI Components
+import { 
+  WadeThemeProvider, 
+  WadeNavbar, 
+  WadeLogin, 
+  WadeRegister 
+} from '@wade-usa/ui';
+
+// 3. Application Config & Pages
+import { WADE_CONFIG } from './config';
+import Home from './pages/Home';
+
+/**
+ * PendingView: Shown when a user is logged in but hasn't been approved yet.
+ */
+const PendingView = ({ onLogout }: { onLogout: () => void }) => (
+  <div style={{ 
+    textAlign: 'center', 
+    color: 'white', 
+    paddingTop: '100px',
+    maxWidth: '500px',
+    margin: '0 auto',
+    fontFamily: 'sans-serif'
+  }}>
+    <h1 style={{ color: '#00ffcc', marginBottom: '20px' }}>Account Under Review</h1>
+    <p style={{ fontSize: '1.1rem', lineHeight: '1.6', color: '#ccc' }}>
+      Thank you for registering! Your account has been created successfully. 
+      An administrator needs to approve your access before you can enter the platform.
+    </p>
+    <button 
+      onClick={onLogout}
+      style={{ 
+        marginTop: '30px', 
+        padding: '12px 24px', 
+        cursor: 'pointer', 
+        background: '#333', 
+        color: 'white', 
+        border: 'none', 
+        borderRadius: '4px',
+        fontWeight: 'bold'
+      }}
+    >
+      Sign Out
+    </button>
+  </div>
+);
+
+/**
+ * AppContent: The main shell of the application.
+ */
+const AppContent = () => {
+  const [theme, setTheme] = useState<any>(null);
+  const [navData, setNavData] = useState<any>(null);
+  const [appLoading, setAppLoading] = useState(true);
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  const { 
+    user, 
+    loading: authLoading, 
+    isAdmin, 
+    roleLabel, 
+    login, 
+    logout 
+  } = useAuth();
+
+  // Handle the "Register -> Then Login" workflow
+  const handleRegistration = async (email: string, pass: string, fName: string, lName: string) => {
+    // 1. Create the user in Directus
+    const res = await registerUser(email, pass, fName, lName);
+    
+    if (res.success) {
+      // 2. If successful, log them in immediately using the credentials they just made
+      await login(email, pass);
+      // 3. Close the registration form toggle
+      setIsRegistering(false);
+    }
+    
+    return res;
+  };
+
   useEffect(() => {
     async function initApp() {
-      try {
-        // 1. Fetch your Theme Singleton from Directus
-        const themeData = await client.request(
-          readSingleton('Global_Settings', {
-            fields: ['*'],
-          })
-        );
-
-        // 2. Update state
-        setTheme(themeData as ThemeSettings);
-        //setStatus(`Online`); // Simplified status
-      } catch (err) {
-        console.error("Initialization error:", err);
-        //setStatus("Brain connection failed.");
+      const settings = await getSettingsGeneric(WADE_CONFIG.collections.settings);
+      
+      if (!settings) {
+        console.warn("Could not load settings. Using system defaults.");
+        // You can set a default "Emergency" theme here if you want
+        setTheme({ project_name: "Wade Template", background_color: "#0a0a0a" });
+      } else {
+        setTheme(settings);
       }
+      
+      setAppLoading(false);
     }
-
     initApp();
   }, []);
 
-  // 5. Loading State (Shows until Directus responds)
-  if (!theme) {
+  if (authLoading || appLoading || !theme) {
     return (
-      <div style={{ padding: '50px', fontFamily: 'sans-serif' }}>
-        <h2>{status}</h2>
-        <p>Ensure your Directus Singleton 'theme_settings' exists and has colors set.</p>
+      <div style={{ 
+        backgroundColor: '#0a0a0a', color: 'white', height: '100vh', 
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: 'sans-serif'
+      }}>
+        Initializing {WADE_CONFIG.branding.appName}...
       </div>
     );
   }
 
-  // 6. Main App Render
   return (
     <WadeThemeProvider themeData={theme}>
-      <div style={{ 
-        padding: '50px', 
-        fontFamily: 'sans-serif',
-        minHeight: '100vh',
-        color: 'var(--brand-primary)' 
-      }}>
-        <header style={{ borderBottom: '1px solid #eee', marginBottom: '20px' }}>
-          <h1>Wade-USA Monolith</h1>
-          <p style={{ opacity: 0.7 }}>Status: {status}</p>
-        </header>
+      <div className="app-shell" style={{ backgroundColor: 'var(--background-color, #0a0a0a)', minHeight: '100vh' }}>
+        
+        <WadeNavbar 
+          items={navData?.links || []} 
+          brandName={WADE_CONFIG.branding.appName} 
+          user={user}
+          isAdmin={isAdmin}
+          onLogout={logout}
+        />
 
-        <main>
-          <section style={{ background: '#5a3c3cff', padding: '30px', borderRadius: '12px' }}>
-            <h3>Theme-Driven Component</h3>
-            <p>This button gets its color from your Directus Dashboard.</p>
-            
-            <WadeButton 
-              label="Action Button" 
-              onClick={() => alert('Handshake Successful!')} 
-            />
-          </section>
+        {/* DEBUG STRIP */}
+        <div style={{ background: '#222', color: '#00ffcc', padding: '5px', fontSize: '11px', textAlign: 'center', borderBottom: '1px solid #333' }}>
+          <strong>DEBUG:</strong> {user?.email || 'Guest'} | <strong>Status:</strong> {roleLabel} | <strong>Admin:</strong> {isAdmin ? 'YES' : 'NO'}
+        </div>
+
+        <main style={{ padding: '20px' }}>
+          {!user ? (
+            /* UNAUTHENTICATED VIEW */
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '60px' }}>
+              {isRegistering ? (
+                <WadeRegister 
+                  onRegister={handleRegistration} 
+                  onBackToLogin={() => setIsRegistering(false)} 
+                />
+              ) : (
+                <>
+                  <WadeLogin onLogin={login} />
+                  <button 
+                    onClick={() => setIsRegistering(true)}
+                    style={{ 
+                      marginTop: '20px', 
+                      background: 'none', 
+                      border: 'none', 
+                      color: '#00ffcc', 
+                      cursor: 'pointer',
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    Don't have an account? Register here
+                  </button>
+                </>
+              )}
+            </div>
+          ) : (
+            /* AUTHENTICATED VIEW */
+            roleLabel === "Pending Approval" ? (
+              <PendingView onLogout={logout} />
+            ) : (
+              <Home />
+            )
+          )}
         </main>
+
       </div>
     </WadeThemeProvider>
   );
-}
+};
 
-export default App;
+export default function App() {
+  return (
+    <WadeAuthProvider>
+      <AppContent />
+    </WadeAuthProvider>
+  );
+}

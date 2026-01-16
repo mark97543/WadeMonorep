@@ -1,0 +1,16 @@
+/* apps/main/src/App.module.css */
+
+.gridContainer {
+  display: grid;
+  /* This is the 'Magic' line for responsiveness */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.sectionHeader {
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--accent-color);
+  padding-left: 1rem;
+}

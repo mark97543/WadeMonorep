@@ -1,0 +1,11 @@
+{
+  "name": "@wade-usa/auth",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@wade-usa/sdk": "workspace:*",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

@@ -1,7 +1,10 @@
-import { createDirectus, rest, staticToken } from '@directus/sdk';
+import { createDirectus, rest, authentication } from '@directus/sdk';
 
-const client = createDirectus('https://api.wade-usa.com')
-    .with(staticToken(import.meta.env.VITE_DIRECTUS_TOKEN))
+const CMS_URL = (import.meta as any).env?.VITE_DIRECTUS_URL || 'https://api.wade-usa.com';
+
+// CLEAN: No static token, just the URL and the Auth Plugin
+export const client = createDirectus(CMS_URL)
+    .with(authentication('cookie'))
     .with(rest());
 
-export { client };
+export * from "./src/services";
