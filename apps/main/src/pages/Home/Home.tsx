@@ -9,7 +9,7 @@ const Home = () => {
 
   return (
     <div className={styles.landing_wrapper}>
-      <h1>This is Landing Page for App</h1>
+      <h1>This is Home Page For App</h1>
     </div>
   );
 };

@@ -71,7 +71,13 @@ importers:
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@18.3.1)
+      react-router-dom:
+        specifier: ^7.12.0
+        version: 7.12.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
+      '@wade-usa/auth':
+        specifier: workspace:*
+        version: link:../auth
       react:
         specifier: ^18.0.0
         version: 18.3.1

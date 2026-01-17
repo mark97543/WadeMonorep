@@ -1,1 +1,1 @@
-export * from './WadeAuthProvider';
+export {WadeAuthProvider, useAuth} from './WadeAuthProvider';

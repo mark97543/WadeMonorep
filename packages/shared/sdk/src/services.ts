@@ -2,16 +2,25 @@
 import { client } from '../index'; 
 import { readItems, readSingleton } from '@directus/sdk';
 import { login, logout, readMe, createUser } from '@directus/sdk';
+import type { WadeSchema } from './schema';
+
+// Helper types to differentiate between regular and singleton collections
+type SingletonCollections<T> = {
+  [K in keyof T]: T[K] extends any[] ? never : K;
+}[keyof T];
+
+type RegularCollections<T> = {
+  [K in keyof T]: T[K] extends any[] ? K : never;
+}[keyof T];
+
 
 /**
  * GENERIC HELPER: Fetch Any Singleton
- * Now we pass the 'collectionName' as an argument!
  */
-export const getSettingsGeneric = async (collectionName: string) => {
+export const getSettingsGeneric = async <T extends SingletonCollections<WadeSchema>>(collectionName: T) => {
   try {
-    // @ts-ignore
     const response = await client.request(
-      readSingleton(collectionName as any, { fields: ['*'] })
+      readSingleton(collectionName, { fields: ['*'] })
     );
     return response;
   } catch (error) {
@@ -23,11 +32,10 @@ export const getSettingsGeneric = async (collectionName: string) => {
 /**
  * GENERIC HELPER: Fetch Any List
  */
-export const getItemsGeneric = async (collectionName: string, query = {}) => {
+export const getItemsGeneric = async <T extends RegularCollections<WadeSchema>>(collectionName: T, query = {}) => {
   try {
-    // @ts-ignore
     const response = await client.request(
-      readItems(collectionName as any, query)
+      readItems(collectionName, query)
     );
     return response;
   } catch (error) {
@@ -41,12 +49,10 @@ export const getItemsGeneric = async (collectionName: string, query = {}) => {
  */
 export const loginUser = async (email: string, pass: string) => {
   try {
-    // We use a generic try/catch to catch network timeouts or 401s
-    await (client as any).login(email, pass); 
+    await client.request(login({ email, password: pass })); 
     return { success: true };
   } catch (error: any) {
     console.error("SDK Auth Error: Login Failed", error);
-    // FAIL-SAFE: Return a friendly message instead of a raw crash
     return { 
       success: false, 
       error: error.errors?.[0]?.message || "Invalid credentials or server offline." 
@@ -60,7 +66,7 @@ export const loginUser = async (email: string, pass: string) => {
  */
 export const logoutUser = async () => {
   try {
-    await client.logout();
+    await client.request(logout());
     return { success: true };
   } catch (error) {
     console.error("SDK Auth Error: Logout Failed", error);
@@ -74,10 +80,11 @@ export const logoutUser = async () => {
  */
 export const getCurrentUser = async () => {
   try {
-    // This syntax is the most robust for the Directus v11+ SDK
     const response = await client.request(
       readMe({
-        fields: ['*', 'role.*'] // This tells Directus: "Give me the user AND everything inside the role"
+        // The 'role.*' is valid for the API, but TS can't parse it.
+        // Using 'as any' here is a pragmatic workaround.
+        fields: ['*', 'role.*' as any] 
       })
     );
     
@@ -94,7 +101,6 @@ export const getCurrentUser = async () => {
  */
 export const registerUser = async (email: string, pass: string, firstName: string, lastName: string) => {
   try {
-    // FAIL-SAFE: Pull from .env so the template works on ANY server
     const PENDING_ROLE_ID = import.meta.env.VITE_PENDING_ROLE_ID || "4248f44d-ec36-4dc8-9f76-86b3fe550d26"; 
 
     const result = await client.request(

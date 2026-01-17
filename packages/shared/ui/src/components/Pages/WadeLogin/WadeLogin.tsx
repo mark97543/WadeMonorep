@@ -1,10 +1,15 @@
+/**
+ * packages/shared/ui/src/components/Pages/WadeLogin/WadeLogin.tsx
+ */
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@wade-usa/auth'; 
 
-interface WadeLoginProps {
-  onLogin: (email: string, pass: string) => Promise<any>;
-}
+export const WadeLogin = () => {
+  // 1. Hook into the Auth Provider
+  const { login } = useAuth(); 
+  const navigate = useNavigate();
 
-export const WadeLogin = ({ onLogin }: WadeLoginProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,24 +20,38 @@ export const WadeLogin = ({ onLogin }: WadeLoginProps) => {
     setError('');
     setLoading(true);
     
-    const res = await onLogin(email, password);
-    
-    if (!res.success) {
-      setError('Invalid email or password');
+  try {
+    console.log("🔵 [WadeLogin] Attempting login for:", email);
+    const res = await login(email, password);
+    console.log("🟢 [WadeLogin] SDK Response:", res);
+    if (res && res.success) {  
+      console.log("🚀 [WadeLogin] Login TRULY successful, redirecting...");
+      navigate('/landing'); 
+    } else {
+      console.warn("🟠 [WadeLogin] Login returned false/error.");
+      // Use the error message from the SDK if available, or a default one
+      setError(res?.error || 'Invalid email or password');
     }
-    setLoading(false);
+    } catch (err: any) {
+      console.error("Login Error:", err);
+      // specific error handling based on Directus error codes could go here
+      setError('Invalid email or password'); 
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={{
       padding: '40px',
-      backgroundColor: '#1a1a1a',
+      backgroundColor: '#1a1a1a', 
       borderRadius: '12px',
       border: '1px solid #333',
       width: '100%',
       maxWidth: '400px',
       color: 'white',
-      fontFamily: 'sans-serif'
+      fontFamily: 'sans-serif',
+      margin: '0 auto' // Centers component if used in a flex container
     }}>
       <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>Member Login</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>

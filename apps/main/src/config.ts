@@ -1,4 +1,4 @@
-// apps/main/src/config.ts
+// /root/wade-usa/apps/main/src/config.ts
 
 export const WADE_CONFIG = {
   // Backend Connection
@@ -6,9 +6,7 @@ export const WADE_CONFIG = {
 
   // Collection Names (The "Key" to your CMS)
   collections: {
-    settings: 'Global_Settings',
-    navigation: 'Navigation',
-    services: 'Services',
+    settings: 'Global_Settings'
   },
   auth:{
     enabled: true, //Toggle to false for a purely public site

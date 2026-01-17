@@ -1,0 +1,19 @@
+/* WadePage.module.css */
+
+.pageWrapper {
+  /* Remove any hardcoded background-color here to avoid conflicts */
+  padding-top: 70px; 
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+.contentContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box; /* Prevents horizontal scroll */
+}

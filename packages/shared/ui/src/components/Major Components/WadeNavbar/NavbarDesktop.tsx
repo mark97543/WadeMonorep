@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './WadeNavbar.module.css';
 import { WadeButton } from '../../Atoms/Button/Button';
 import { Dropdown, DropdownItem } from '../../Atoms/Dropdown/DropDown';
+import { useNavigate } from 'react-router-dom';
 
 interface NavItem {
   label: string;
@@ -18,7 +19,14 @@ interface NavbarDesktopInt {
   themeData?: any;
 }
 
+
+
 export const NavbarDesktop = ({ brandName, items = [], isAdmin, user, onLogout, themeData }: NavbarDesktopInt) => {
+
+  const navigate = useNavigate();
+  console.log(user)
+
+
   return (
     <nav className={styles.navbarDesktopRoot} style={{ 
         backgroundColor: themeData?.surface_color || '#111111', 
@@ -68,7 +76,7 @@ export const NavbarDesktop = ({ brandName, items = [], isAdmin, user, onLogout, 
             {user ? (
               <WadeButton onClick={onLogout} label='Logout' />
             ) : (
-              <WadeButton label='Login' />
+              <WadeButton label='Login' onClick={()=>navigate('/login')}/>
             )}
           </div>
         </div>

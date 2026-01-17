@@ -1,20 +1,24 @@
 /* apps/main/src/index.css */
 
-body {
+html, body {
   margin: 0;
   padding: 0;
-  /* Apply the Directus colors here */
-  background-color: var(--background-color); 
-  color: var(--text-color);
-  
-  /* Smoothly transition when you change colors in Directus */
-  transition: background-color 0.3s ease; 
-  
-  font-family: 'Inter', system-ui, sans-serif;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  /* This ensures the background color from the theme fills the whole window */
+  background-color: var(--surface-color, #111111); 
+  overflow-x: hidden;
 }
 
-/* Optional: Make all your links use your High-Energy Purple */
-a {
-  color: var(--accent-color);
+:root {
+  min-height: 100vh;
+  /* This logic turns your CMS '16px' and '1.25' ratio into a working system */
+  --base-size: var(--font-base-size, 16px);
+  --ratio: var(--font-scale-ratio, 1.25);
+  
+  font-size: var(--base-size);
 }
+
+h1 { font-size: calc(1rem * var(--ratio) * var(--ratio) * var(--ratio)); }
+h2 { font-size: calc(1rem * var(--ratio) * var(--ratio)); }
+h3 { font-size: calc(1rem * var(--ratio)); }

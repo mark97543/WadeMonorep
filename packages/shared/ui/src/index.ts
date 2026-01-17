@@ -6,3 +6,4 @@ export * from './components/Pages/WadeLogin/WadeLogin';
 export * from './components/Pages/WadeRegister/WadeRegister';
 export * from './components/Major Components/WadeGrid/WadeGrid';
 export * from './components/Pages/WadePending/WadePending';
+export * from './components/Atoms/Loader/WadeLoader'

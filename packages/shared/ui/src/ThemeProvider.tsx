@@ -13,17 +13,17 @@ export const WadeThemeProvider = ({ themeData = {}, children }: ThemeProps) => {
     const root = document.documentElement;
 
     // 1. Setup Defaults
-    const defaults: Record<string, string> = {
-      '--background-color': '#0a0a0a', 
-      '--primary-color': '#00ffcc',
-      '--text-color': '#ffffff'
-    };
+    // const defaults: Record<string, string> = {
+    //   // '--background-color': '#0a0a0a', 
+    //   // '--primary-color': '#00ffcc',
+    //   // '--text-color': '#ffffff'
+    // };
 
     // 2. Apply Defaults (This should always fire)
-    Object.entries(defaults).forEach(([varName, val]) => {
-      root.style.setProperty(varName, val);
-      console.log(`🏠 Default Set: ${varName} = ${val}`);
-    });
+    // Object.entries(defaults).forEach(([varName, val]) => {
+    //   root.style.setProperty(varName, val);
+    //   console.log(`🏠 Default Set: ${varName} = ${val}`);
+    // });
 
     // 3. Overwrite if themeData has keys
     const themeKeys = Object.keys(themeData);
